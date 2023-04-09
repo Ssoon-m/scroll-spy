@@ -6,6 +6,7 @@ import ProductsPurchaseInfo from "@/components/products/ProductsPurchaseInfo";
 import ProductsQnA from "@/components/products/ProductsQnA";
 import ProductsReview from "@/components/products/ProductsReview";
 import ScrollSpy from "@/components/headlessui/ScrollSpy";
+import { useRouter } from "next/navigation";
 const PageClient = () => {
   const sectionRefs = [
     useRef<HTMLElement>(null),
@@ -14,16 +15,19 @@ const PageClient = () => {
     useRef<HTMLElement>(null),
   ];
   const [currentTab, setCurrentTab] = useState(0);
+  const router = useRouter();
 
   const handleSetActive = (index: number) => {
     if (currentTab !== index) {
       setCurrentTab(index);
+      router.replace(`#${sectionRefs[index].current?.id}` ?? "/");
     }
   };
 
   const handleActiveTabClick = (index: number) => {
     if (sectionRefs[index].current) {
-      sectionRefs[index].current?.scrollIntoView({ behavior: "smooth" });
+      sectionRefs[index].current?.scrollIntoView();
+      router.push(`#${sectionRefs[index].current?.id}` ?? "/");
     }
     setCurrentTab(index);
   };
