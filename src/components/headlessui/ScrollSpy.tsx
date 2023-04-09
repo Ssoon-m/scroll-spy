@@ -1,18 +1,20 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 
-interface ScrollSpyProps {
+interface Props {
   setActiveTab: (index: number) => void;
-  sectionRefs: Array<HTMLElement | null>;
+  sectionRefs: React.RefObject<HTMLElement>[];
 }
 
-const ScrollSpy = ({ setActiveTab, sectionRefs }: ScrollSpyProps) => {
+const ScrollSpy = ({ setActiveTab, sectionRefs }: Props) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const index = sectionRefs.findIndex(($el) => $el === entry.target);
+            const index = sectionRefs.findIndex(
+              ($el) => $el.current === entry.target
+            );
             setActiveTab(index);
           }
         });
@@ -20,15 +22,15 @@ const ScrollSpy = ({ setActiveTab, sectionRefs }: ScrollSpyProps) => {
       { threshold: 0.9 }
     );
     sectionRefs.forEach((section) => {
-      if (section) {
-        observer.observe(section);
+      if (section.current) {
+        observer.observe(section.current);
       }
     });
     return () => {
       observer.disconnect();
     };
   }, [sectionRefs]);
-  return <></>;
+  return null;
 };
 
 export default ScrollSpy;

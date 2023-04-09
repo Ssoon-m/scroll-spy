@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cx from "classnames";
 
 interface listItem {
@@ -15,10 +15,13 @@ interface Props {
 
 const Tab = ({ items, activeTab = 0, onClickTab }: Props) => {
   const [currentTab, setCurrentTab] = useState(activeTab);
+  useEffect(() => {
+    setCurrentTab(activeTab);
+  }, [activeTab]);
 
   const handleListItem = (index: number) => {
-    onClickTab && onClickTab(index);
     setCurrentTab(index);
+    onClickTab && onClickTab(index);
   };
   return (
     <ul className="list-nones flex border-b border-b-stone-300 bg-white">
@@ -27,7 +30,7 @@ const Tab = ({ items, activeTab = 0, onClickTab }: Props) => {
           key={i}
           onClick={() => handleListItem(i)}
           className={cx(
-            "flex justify-center items-center flex-1 p-3 hover:text-pink-400 hover:cursor-pointer",
+            "flex justify-center items-center flex-1 p-3 hover:cursor-pointer",
             currentTab === i && "text-pink-400 border-b-2 border-b-pink-400"
           )}
         >

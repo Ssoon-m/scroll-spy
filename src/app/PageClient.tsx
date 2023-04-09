@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Tab from "@/components/base/Tab";
 import ProductsInfo from "@/components/products/ProductsInfo";
 import ProductsPurchaseInfo from "@/components/products/ProductsPurchaseInfo";
@@ -7,30 +7,33 @@ import ProductsQnA from "@/components/products/ProductsQnA";
 import ProductsReview from "@/components/products/ProductsReview";
 import ScrollSpy from "@/components/headlessui/ScrollSpy";
 const PageClient = () => {
-  const section1Ref = useRef<HTMLElement>(null);
-  const section2Ref = useRef<HTMLElement>(null);
-  const section3Ref = useRef<HTMLElement>(null);
-  const section4Ref = useRef<HTMLElement>(null);
-  const [currentTab, setCurrentTab] = useState(0);
   const sectionRefs = [
-    section1Ref.current,
-    section2Ref.current,
-    section3Ref.current,
-    section4Ref.current,
+    useRef<HTMLElement>(null),
+    useRef<HTMLElement>(null),
+    useRef<HTMLElement>(null),
+    useRef<HTMLElement>(null),
   ];
-  const handleTabClick = (index: number) => {
-    if (sectionRefs[index]) {
-      sectionRefs[index]?.scrollIntoView({ behavior: "smooth" });
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const handleSetActive = (index: number) => {
+    if (currentTab !== index) {
       setCurrentTab(index);
     }
   };
 
+  const handleActiveTabClick = (index: number) => {
+    if (sectionRefs[index].current) {
+      sectionRefs[index].current?.scrollIntoView({ behavior: "smooth" });
+    }
+    setCurrentTab(index);
+  };
+
   return (
     <div>
-      <ScrollSpy sectionRefs={sectionRefs} setActiveTab={handleTabClick} />
+      <ScrollSpy sectionRefs={sectionRefs} setActiveTab={handleSetActive} />
       <div className="sticky top-0">
         <Tab
-          onClickTab={handleTabClick}
+          onClickTab={handleActiveTabClick}
           activeTab={currentTab}
           items={[
             { title: "상품정보" },
@@ -41,16 +44,16 @@ const PageClient = () => {
         />
       </div>
       <div>
-        <section id="productInfo" ref={section1Ref}>
+        <section id="productInfo" ref={sectionRefs[0]}>
           <ProductsInfo />
         </section>
-        <section id="productsPurchaseInfo" ref={section2Ref}>
+        <section id="productsPurchaseInfo" ref={sectionRefs[1]}>
           <ProductsPurchaseInfo />
         </section>
-        <section id="productsQnA" ref={section3Ref}>
+        <section id="productsQnA" ref={sectionRefs[2]}>
           <ProductsQnA />
         </section>
-        <section id="productsReview" ref={section4Ref}>
+        <section id="productsReview" ref={sectionRefs[3]}>
           <ProductsReview />
         </section>
       </div>
