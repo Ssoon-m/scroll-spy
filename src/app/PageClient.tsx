@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Tab from "@/components/base/Tab";
 import ProductsInfo from "@/components/products/ProductsInfo";
 import ProductsPurchaseInfo from "@/components/products/ProductsPurchaseInfo";
@@ -8,26 +8,19 @@ import ProductsReview from "@/components/products/ProductsReview";
 import ScrollSpy from "@/components/headlessui/ScrollSpy";
 import { useRouter } from "next/navigation";
 const PageClient = () => {
-  const sectionRefs = [
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-    useRef<HTMLElement>(null),
-  ];
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
   const [currentTab, setCurrentTab] = useState(0);
   const router = useRouter();
 
   const handleSetActive = (index: number) => {
-    if (currentTab !== index) {
-      setCurrentTab(index);
-      router.replace(`#${sectionRefs[index].current?.id}` ?? "/");
-    }
+    setCurrentTab(index);
+    // router.replace(`#${sectionRefs.current[index]?.id}` ?? "/");
   };
 
   const handleActiveTabClick = (index: number) => {
-    if (sectionRefs[index].current) {
-      sectionRefs[index].current?.scrollIntoView();
-      router.push(`#${sectionRefs[index].current?.id}` ?? "/");
+    if (sectionRefs.current[index]) {
+      sectionRefs.current[index]?.scrollIntoView();
+      router.push(`#${sectionRefs.current[index]?.id}` ?? "/");
     }
     setCurrentTab(index);
   };
@@ -48,16 +41,22 @@ const PageClient = () => {
         />
       </div>
       <div>
-        <section id="productInfo" ref={sectionRefs[0]}>
+        <section id="productInfo" ref={(el) => (sectionRefs.current[0] = el)}>
           <ProductsInfo />
         </section>
-        <section id="productsPurchaseInfo" ref={sectionRefs[1]}>
+        <section
+          id="productsPurchaseInfo"
+          ref={(el) => (sectionRefs.current[1] = el)}
+        >
           <ProductsPurchaseInfo />
         </section>
-        <section id="productsQnA" ref={sectionRefs[2]}>
+        <section id="productsQnA" ref={(el) => (sectionRefs.current[2] = el)}>
           <ProductsQnA />
         </section>
-        <section id="productsReview" ref={sectionRefs[3]}>
+        <section
+          id="productsReview"
+          ref={(el) => (sectionRefs.current[3] = el)}
+        >
           <ProductsReview />
         </section>
       </div>
