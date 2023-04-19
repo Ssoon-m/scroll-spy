@@ -14,6 +14,11 @@ const PageClient = () => {
 
   const handleSetActive = (index: number) => {
     setCurrentTab(index);
+    window.history.replaceState(
+      { data: "replace" },
+      "",
+      `#${sectionRefs.current[index]?.id}` ?? "/"
+    );
     // router.replace(`#${sectionRefs.current[index]?.id}` ?? "/");
   };
 
